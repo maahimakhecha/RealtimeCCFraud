@@ -36,7 +36,7 @@ class ReplayBuffer:
         self.memory = deque(maxlen=buffer_size)
         self.batch_size = batch_size
         self.experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
-        random.seed(seed)
+        random.seed(seed)   
     
     def add(self, state, action, reward, next_state, done):
         e = self.experience(state, action, reward, next_state, done)
@@ -62,12 +62,12 @@ class Agent:
         
         self.qnet_local = DQN(input_dim=state_size, output_dim=action_size).double().to(device)
         self.qnet_target = DQN(input_dim=state_size, output_dim=action_size).double().to(device)
-        # Use weight decay for L2 regularization
+        
         self.optimizer = optim.Adam(self.qnet_local.parameters(), lr=5e-4, weight_decay=1e-5)
         
         self.memory = ReplayBuffer(buffer_size=int(1e5), batch_size=64, seed=seed)
         self.t_step = 0
-        self.train_loss = []  # For visualizing training loss
+        self.train_loss = []  
     
     def step(self, state, action, reward, next_state, done):
         self.memory.add(state, action, reward, next_state, done)
